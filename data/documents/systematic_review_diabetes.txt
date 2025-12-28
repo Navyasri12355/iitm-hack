@@ -1,0 +1,20 @@
+Systematic Review: Diabetes Management in Primary Care
+
+Authors: Smith, J., Johnson, M., Brown, K.
+Publication Date: 2023-06-15
+Journal: Journal of Clinical Medicine
+DOI: 10.1234/jcm.2023.12345
+
+Abstract:
+This systematic review examines the effectiveness of various diabetes management 
+strategies in primary care settings. We analyzed 45 randomized controlled trials 
+involving 12,000 patients with Type 2 diabetes.
+
+Key Findings:
+- Metformin remains first-line therapy with 85% efficacy
+- Lifestyle interventions show 70% improvement in HbA1c levels
+- Patient education programs reduce complications by 40%
+
+Conclusion:
+Comprehensive diabetes management combining medication, lifestyle changes, and 
+patient education provides optimal outcomes in primary care settings.

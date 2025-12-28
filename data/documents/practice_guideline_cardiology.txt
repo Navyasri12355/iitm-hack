@@ -1,0 +1,23 @@
+Clinical Practice Guideline: Management of Acute Coronary Syndrome
+
+Organization: American College of Cardiology
+Publication Date: 2023-09-10
+Version: 2023.1
+
+Recommendations:
+
+Class I (Strong Recommendation):
+1. Dual antiplatelet therapy for all ACS patients
+2. Early invasive strategy within 24 hours for high-risk patients
+3. Statin therapy initiated within 24 hours
+
+Class IIa (Moderate Recommendation):
+1. Beta-blocker therapy within 24 hours if no contraindications
+2. ACE inhibitor therapy for patients with reduced ejection fraction
+
+Class III (Not Recommended):
+1. Routine use of glycoprotein IIb/IIIa inhibitors
+2. Prophylactic antiarrhythmic therapy
+
+Evidence Level: Based on multiple randomized controlled trials and 
+meta-analyses involving over 50,000 patients.

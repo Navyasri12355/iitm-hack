@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  clinical-evidence-copilot:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/documents:/app/data/documents
+      - ./data/samples:/app/data/samples
+      - ./.env:/app/.env
+    environment:
+      - PYTHONPATH=/app
+      - DOCUMENTS_PATH=/app/data/documents
+    depends_on:
+      - pathway-worker
+    networks:
+      - clinical-network
+
+  pathway-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./data/documents:/app/data/documents
+      - ./data/samples:/app/data/samples
+      - ./.env:/app/.env
+    environment:
+      - PYTHONPATH=/app
+      - DOCUMENTS_PATH=/app/data/documents
+    networks:
+      - clinical-network
+
+networks:
+  clinical-network:
+    driver: bridge
+
+volumes:
+  documents_data:
+  samples_data:

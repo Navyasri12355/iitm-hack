@@ -1,0 +1,16 @@
+# Requirements for API service (without pathway)
+openai>=1.0.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+python-multipart>=0.0.6
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# Document processing dependencies
+unstructured>=0.10.0
+python-magic>=0.4.27
+watchdog>=3.0.0
+
+# Testing dependencies
+pytest>=7.0.0
+hypothesis>=6.0.0

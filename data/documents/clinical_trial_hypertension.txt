@@ -1,0 +1,23 @@
+Randomized Controlled Trial: ACE Inhibitors vs ARBs in Hypertension
+
+Authors: Wilson, A., Davis, R., Miller, S.
+Publication Date: 2023-08-20
+Journal: Hypertension Research
+DOI: 10.1234/hr.2023.67890
+
+Study Design: Double-blind, randomized controlled trial
+Sample Size: 2,500 patients
+Duration: 24 months
+
+Objective:
+To compare the effectiveness of ACE inhibitors versus ARBs in treating 
+essential hypertension in adults aged 40-70.
+
+Results:
+- ACE inhibitors: 78% achieved target BP (<140/90)
+- ARBs: 82% achieved target BP (<140/90)
+- Side effects: ACE inhibitors 15%, ARBs 8%
+
+Conclusion:
+Both drug classes are effective, but ARBs show slightly better tolerability 
+and efficacy in this population.
