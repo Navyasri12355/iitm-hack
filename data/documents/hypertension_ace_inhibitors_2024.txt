@@ -1,0 +1,105 @@
+# Efficacy and Safety of ACE Inhibitors in Elderly Hypertensive Patients: A Systematic Review
+
+**Authors:** Dr. Jane Smith, MD, PhD¹, Dr. Robert Johnson, MD², Dr. Maria Garcia, PharmD³
+
+**Affiliations:**
+1. Department of Cardiology, Harvard Medical School
+2. Division of Geriatric Medicine, Mayo Clinic
+3. Department of Clinical Pharmacy, Johns Hopkins University
+
+**Journal:** Journal of Hypertension
+**Publication Date:** January 15, 2024
+**DOI:** 10.1234/jh.2024.001
+
+## Abstract
+
+**Background:** Hypertension affects over 70% of adults aged 65 and older. ACE inhibitors are commonly prescribed as first-line therapy, but their efficacy and safety profile in elderly patients requires systematic evaluation.
+
+**Methods:** We conducted a systematic review and meta-analysis of randomized controlled trials published between 2010-2023 examining ACE inhibitor therapy in patients ≥65 years with hypertension. Primary outcomes included blood pressure reduction, cardiovascular events, and adverse effects.
+
+**Results:** 24 studies involving 15,847 elderly patients were included. ACE inhibitors reduced systolic blood pressure by 12.3 mmHg (95% CI: 10.1-14.5) and diastolic blood pressure by 7.8 mmHg (95% CI: 6.2-9.4) compared to placebo. Cardiovascular event reduction was 23% (RR 0.77, 95% CI: 0.68-0.87). Common adverse effects included dry cough (8.2%), hyperkalemia (3.1%), and acute kidney injury (1.8%).
+
+**Conclusions:** ACE inhibitors demonstrate significant efficacy in elderly hypertensive patients with acceptable safety profile. Careful monitoring of kidney function and electrolytes is recommended.
+
+**Keywords:** ACE inhibitors, elderly, hypertension, cardiovascular outcomes, safety
+
+## Introduction
+
+Hypertension is a leading risk factor for cardiovascular disease, stroke, and kidney disease, particularly in the elderly population. The prevalence of hypertension increases dramatically with age, affecting approximately 70% of adults over 65 years. Current guidelines recommend ACE inhibitors as first-line therapy for hypertension, but the evidence base for their use specifically in elderly patients has not been comprehensively reviewed.
+
+The physiological changes associated with aging, including decreased kidney function, altered drug metabolism, and increased comorbidities, may influence both the efficacy and safety of ACE inhibitor therapy. This systematic review aims to evaluate the current evidence for ACE inhibitor use in elderly hypertensive patients.
+
+## Methods
+
+### Search Strategy
+We searched MEDLINE, EMBASE, and Cochrane Central Register of Controlled Trials from January 2010 to December 2023. Search terms included "ACE inhibitors," "elderly," "hypertension," and "randomized controlled trial."
+
+### Inclusion Criteria
+- Randomized controlled trials
+- Participants aged ≥65 years with hypertension
+- ACE inhibitor intervention vs. placebo or active comparator
+- Minimum follow-up of 12 weeks
+
+### Data Extraction
+Two reviewers independently extracted data on study characteristics, patient demographics, interventions, and outcomes.
+
+## Results
+
+### Study Characteristics
+24 studies met inclusion criteria, involving 15,847 patients (mean age 72.4 years, 58% female). Study duration ranged from 12 weeks to 5 years.
+
+### Blood Pressure Outcomes
+ACE inhibitors demonstrated significant blood pressure reduction:
+- Systolic BP: -12.3 mmHg (95% CI: -14.5 to -10.1, p<0.001)
+- Diastolic BP: -7.8 mmHg (95% CI: -9.4 to -6.2, p<0.001)
+
+### Cardiovascular Outcomes
+- Cardiovascular events reduced by 23% (RR 0.77, 95% CI: 0.68-0.87)
+- Stroke reduction: 28% (RR 0.72, 95% CI: 0.61-0.85)
+- Heart failure hospitalization: 31% reduction (RR 0.69, 95% CI: 0.58-0.82)
+
+### Safety Profile
+Common adverse effects included:
+- Dry cough: 8.2% (vs 2.1% placebo)
+- Hyperkalemia (K+ >5.5 mEq/L): 3.1%
+- Acute kidney injury: 1.8%
+- Angioedema: 0.3%
+
+### Subgroup Analysis
+Patients with diabetes showed greater cardiovascular benefit (RR 0.71, 95% CI: 0.59-0.85) compared to non-diabetic patients (RR 0.82, 95% CI: 0.71-0.94).
+
+## Discussion
+
+This systematic review provides strong evidence supporting the use of ACE inhibitors as first-line therapy in elderly hypertensive patients. The magnitude of blood pressure reduction (12.3/7.8 mmHg) is clinically significant and translates to meaningful cardiovascular risk reduction.
+
+The 23% reduction in cardiovascular events is consistent with previous meta-analyses in younger populations, suggesting that age does not diminish the cardiovascular protective effects of ACE inhibitors. The particularly strong benefit in diabetic patients supports current guidelines recommending ACE inhibitors as preferred agents in this high-risk subgroup.
+
+Safety concerns, while present, are manageable with appropriate monitoring. The 8.2% incidence of dry cough, while higher than placebo, is consistent with known ACE inhibitor side effects. The low incidence of serious adverse effects (hyperkalemia 3.1%, acute kidney injury 1.8%) supports the overall safety profile in elderly patients.
+
+### Clinical Implications
+1. ACE inhibitors should be considered first-line therapy for elderly hypertensive patients
+2. Start with low doses (e.g., lisinopril 5mg daily) and titrate gradually
+3. Monitor kidney function and electrolytes at 1-2 weeks after initiation
+4. Consider ARBs for patients who develop ACE inhibitor cough
+
+### Limitations
+- Heterogeneity in study populations and ACE inhibitor types
+- Limited data on patients >80 years
+- Potential publication bias
+
+## Conclusions
+
+ACE inhibitors demonstrate significant efficacy and acceptable safety in elderly hypertensive patients. The cardiovascular benefits outweigh the risks in most patients, supporting their use as first-line therapy. Careful patient selection and monitoring can minimize adverse effects while maximizing therapeutic benefit.
+
+## Funding
+This research was supported by grants from the National Institute on Aging (R01-AG054321) and the American Heart Association (18SFRN34110082).
+
+## Conflicts of Interest
+Dr. Smith has received consulting fees from Pfizer and Novartis. Dr. Johnson and Dr. Garcia report no conflicts of interest.
+
+## References
+[References would be listed here in a real document - abbreviated for this mock document]
+
+1. Williams B, et al. 2018 ESC/ESH Guidelines for the management of arterial hypertension. Eur Heart J. 2018;39(33):3021-3104.
+2. Whelton PK, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults. Hypertension. 2018;71(6):e13-e115.
+3. Williamson JD, et al. Intensive vs Standard Blood Pressure Control and Cardiovascular Disease Outcomes in Adults Aged ≥75 Years. JAMA. 2016;315(24):2673-2682.

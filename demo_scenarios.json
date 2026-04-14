@@ -1,0 +1,299 @@
+{
+  "clinical_queries": [
+    {
+      "id": "hypertension_elderly_basic",
+      "category": "Basic Query Processing",
+      "query_text": "What is the recommended first-line treatment for hypertension in elderly patients over 65 years old?",
+      "urgency_level": "routine",
+      "expected_evidence": [
+        "ACE inhibitors effectiveness in elderly",
+        "Safety profile and dosing considerations",
+        "Comparison with other antihypertensive classes"
+      ],
+      "demonstrates": [
+        "Evidence-based ranking",
+        "Age-specific recommendations",
+        "Citation completeness"
+      ]
+    },
+    {
+      "id": "diabetes_hba1c_targets",
+      "category": "Guideline Integration",
+      "query_text": "What are the current ADA guidelines for HbA1c targets in adults with type 2 diabetes?",
+      "urgency_level": "routine",
+      "expected_evidence": [
+        "ADA 2024 Standards of Care",
+        "Individualized target considerations",
+        "Risk-benefit analysis"
+      ],
+      "demonstrates": [
+        "Current guideline integration",
+        "Personalized medicine approach",
+        "Quality of evidence assessment"
+      ]
+    },
+    {
+      "id": "aspirin_primary_prevention_controversial",
+      "category": "Contradiction Detection",
+      "query_text": "Should I prescribe aspirin for primary prevention of cardiovascular disease in a 55-year-old patient with 12% 10-year ASCVD risk?",
+      "urgency_level": "urgent",
+      "expected_evidence": [
+        "2019 AHA/ACC guidelines supporting aspirin",
+        "2024 meta-analysis contradicting guidelines",
+        "Bleeding risk vs cardiovascular benefit"
+      ],
+      "demonstrates": [
+        "Contradiction detection and explanation",
+        "Risk-benefit analysis",
+        "Conflicting evidence reconciliation"
+      ]
+    },
+    {
+      "id": "complex_diabetes_comorbidities",
+      "category": "Multi-step Reasoning",
+      "query_text": "What is the best glucose-lowering medication for a 68-year-old patient with type 2 diabetes, heart failure with reduced ejection fraction, and stage 3 chronic kidney disease?",
+      "urgency_level": "urgent",
+      "expected_evidence": [
+        "SGLT2 inhibitor cardiovascular outcomes",
+        "Kidney protection benefits",
+        "Heart failure specific considerations"
+      ],
+      "demonstrates": [
+        "Multi-step agentic reasoning",
+        "Comorbidity integration",
+        "Evidence synthesis across conditions"
+      ]
+    },
+    {
+      "id": "ambiguous_chest_pain",
+      "category": "Ambiguity Handling",
+      "query_text": "Patient has chest pain",
+      "urgency_level": "emergency",
+      "expected_response": "clarification_request",
+      "demonstrates": [
+        "Ambiguity detection",
+        "Clarification request generation",
+        "Emergency triage considerations"
+      ]
+    },
+    {
+      "id": "statin_therapy_elderly",
+      "category": "Age-Specific Therapy",
+      "query_text": "Should I start statin therapy in an 82-year-old patient with no history of cardiovascular disease but elevated cholesterol?",
+      "urgency_level": "routine",
+      "expected_evidence": [
+        "Primary prevention in very elderly",
+        "Life expectancy considerations",
+        "Benefit-risk in advanced age"
+      ],
+      "demonstrates": [
+        "Age-specific evidence evaluation",
+        "Shared decision-making factors",
+        "Quality vs quantity of life considerations"
+      ]
+    }
+  ],
+  "document_scenarios": [
+    {
+      "id": "hypertension_update_arb_superiority",
+      "category": "Recommendation Update",
+      "filename": "arb_vs_ace_elderly_2024.txt",
+      "title": "ARBs vs ACE Inhibitors in Elderly Hypertensive Patients: Updated Meta-Analysis",
+      "content_summary": "New evidence suggesting ARBs may be superior to ACE inhibitors in elderly patients",
+      "key_findings": [
+        "18% reduction in cardiovascular events with ARBs vs ACE inhibitors",
+        "Significantly lower cough rates (1.2% vs 8.4%)",
+        "Better kidney function preservation",
+        "Similar blood pressure reduction efficacy"
+      ],
+      "clinical_impact": "Contradicts previous recommendations favoring ACE inhibitors",
+      "affects_queries": ["hypertension_elderly_basic"],
+      "demonstrates": [
+        "Live recommendation updates",
+        "Contradiction detection",
+        "Evidence hierarchy re-evaluation"
+      ]
+    },
+    {
+      "id": "diabetes_cgm_expansion",
+      "category": "Guideline Expansion",
+      "filename": "cgm_type2_diabetes_expanded_2024.txt",
+      "title": "Continuous Glucose Monitoring in Type 2 Diabetes: Expanded Indications",
+      "content_summary": "New evidence supporting CGM use in broader type 2 diabetes populations",
+      "key_findings": [
+        "CGM beneficial in non-insulin treated type 2 diabetes",
+        "0.4% HbA1c reduction vs standard monitoring",
+        "Improved time-in-range and reduced hypoglycemia",
+        "Cost-effectiveness across risk groups"
+      ],
+      "clinical_impact": "Expands CGM indications beyond current ADA guidelines",
+      "affects_queries": ["diabetes_hba1c_targets"],
+      "demonstrates": [
+        "Technology integration updates",
+        "Guideline evolution",
+        "Cost-effectiveness considerations"
+      ]
+    },
+    {
+      "id": "statin_very_elderly_rct",
+      "category": "New Evidence",
+      "filename": "statin_very_elderly_rct_2024.txt",
+      "title": "Statin Therapy in Adults Over 80: The ELDERLY-STATIN Randomized Trial",
+      "content_summary": "First large RCT of statin therapy specifically in very elderly patients",
+      "key_findings": [
+        "No mortality benefit in patients >80 years",
+        "Modest cardiovascular event reduction (12%)",
+        "Increased muscle-related adverse events",
+        "Quality of life considerations"
+      ],
+      "clinical_impact": "Questions routine statin use in very elderly patients",
+      "affects_queries": ["statin_therapy_elderly"],
+      "demonstrates": [
+        "Age-specific evidence generation",
+        "Risk-benefit recalibration",
+        "Quality of life integration"
+      ]
+    }
+  ],
+  "live_update_scenarios": [
+    {
+      "id": "breaking_drug_safety_alert",
+      "category": "Safety Alert",
+      "title": "FDA Safety Alert: Increased Fracture Risk with Long-term PPI Use",
+      "urgency": "high",
+      "content": "New safety data shows 23% increased hip fracture risk with PPI use >1 year",
+      "affects_recommendations": "All queries involving PPI therapy",
+      "demonstrates": [
+        "Real-time safety alert integration",
+        "Risk profile updates",
+        "Clinical decision impact"
+      ]
+    },
+    {
+      "id": "guideline_emergency_update",
+      "category": "Guideline Update",
+      "title": "Emergency AHA/ACC Update: Blood Pressure Targets in Diabetes",
+      "urgency": "medium",
+      "content": "Updated recommendation: <130/80 mmHg for all diabetic patients regardless of age",
+      "affects_recommendations": "Diabetes and hypertension management queries",
+      "demonstrates": [
+        "Guideline change propagation",
+        "Multi-condition impact",
+        "Evidence-based target updates"
+      ]
+    }
+  ],
+  "demonstration_flow": [
+    {
+      "phase": "1_basic_queries",
+      "title": "Basic Clinical Query Processing",
+      "description": "Demonstrate core functionality with straightforward clinical questions",
+      "queries": ["hypertension_elderly_basic", "diabetes_hba1c_targets"],
+      "expected_duration": "3-5 minutes",
+      "key_points": [
+        "Response time <30 seconds",
+        "Evidence-based recommendations",
+        "Citation completeness",
+        "Confidence scoring"
+      ]
+    },
+    {
+      "phase": "2_live_ingestion",
+      "title": "Live Document Ingestion",
+      "description": "Add new medical literature and show real-time indexing",
+      "documents": ["hypertension_update_arb_superiority"],
+      "expected_duration": "2-3 minutes",
+      "key_points": [
+        "Document indexing <60 seconds",
+        "Automatic metadata extraction",
+        "Credibility scoring",
+        "Real-time availability"
+      ]
+    },
+    {
+      "phase": "3_recommendation_updates",
+      "title": "Live Recommendation Updates",
+      "description": "Show how new evidence updates existing recommendations",
+      "trigger_query": "hypertension_elderly_basic",
+      "expected_changes": "Updated recommendation favoring ARBs over ACE inhibitors",
+      "expected_duration": "2-3 minutes",
+      "key_points": [
+        "Automatic recommendation updates",
+        "Change reason explanation",
+        "Confidence score adjustments",
+        "WebSocket notifications"
+      ]
+    },
+    {
+      "phase": "4_contradiction_detection",
+      "title": "Contradiction Detection",
+      "description": "Demonstrate system's ability to identify and explain conflicting evidence",
+      "queries": ["aspirin_primary_prevention_controversial"],
+      "expected_duration": "3-4 minutes",
+      "key_points": [
+        "Conflicting evidence identification",
+        "Contradiction explanation",
+        "Risk-benefit analysis",
+        "Clinical decision support"
+      ]
+    },
+    {
+      "phase": "5_agentic_reasoning",
+      "title": "Multi-step Agentic Reasoning",
+      "description": "Show complex query processing with multi-step reasoning",
+      "queries": ["complex_diabetes_comorbidities"],
+      "expected_duration": "4-5 minutes",
+      "key_points": [
+        "Query decomposition",
+        "Multi-step reasoning process",
+        "Evidence synthesis",
+        "Comorbidity integration"
+      ]
+    },
+    {
+      "phase": "6_ambiguity_handling",
+      "title": "Ambiguity Detection and Clarification",
+      "description": "Show how system handles unclear or incomplete queries",
+      "queries": ["ambiguous_chest_pain"],
+      "expected_duration": "2-3 minutes",
+      "key_points": [
+        "Ambiguity detection",
+        "Clarification requests",
+        "Emergency triage",
+        "Guided query refinement"
+      ]
+    },
+    {
+      "phase": "7_recommendation_evolution",
+      "title": "Recommendation History and Evolution",
+      "description": "Show how recommendations change over time with new evidence",
+      "expected_duration": "3-4 minutes",
+      "key_points": [
+        "Recommendation versioning",
+        "Change tracking",
+        "Historical analysis",
+        "Evidence evolution"
+      ]
+    }
+  ],
+  "success_metrics": {
+    "performance": {
+      "query_response_time": "<30 seconds",
+      "document_indexing_time": "<60 seconds",
+      "websocket_connection": "stable",
+      "system_availability": ">99%"
+    },
+    "functionality": {
+      "evidence_citation": "all recommendations include citations",
+      "contradiction_detection": "conflicting evidence flagged",
+      "reasoning_transparency": "multi-step process visible",
+      "live_updates": "recommendations update with new evidence"
+    },
+    "clinical_relevance": {
+      "guideline_compliance": "current guidelines referenced",
+      "evidence_quality": "systematic reviews and RCTs prioritized",
+      "safety_considerations": "adverse effects and contraindications noted",
+      "personalization": "patient-specific factors considered"
+    }
+  }
+}

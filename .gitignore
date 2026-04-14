@@ -1,0 +1,72 @@
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+develop-eggs/
+downloads/
+.installed.cfg
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+
+# Data & Cache
+*.db
+*.sqlite
+*.sqlite3
+*.cache
+.cache/
+
+# Project-specific
+data/documents/.cache/
+vector_store/
+*.pkl
+*.joblib

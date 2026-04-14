@@ -1,0 +1,22 @@
+# Minimal requirements for Pathway worker service (CPU-only)
+# Core dependencies only
+pathway>=0.7.0
+openai>=1.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# Basic document processing
+python-magic>=0.4.27
+pdfminer.six>=20221105
+unstructured>=0.10.0
+unstructured-inference>=0.7.0
+pillow-heif>=0.10.0
+pi-heif>=0.16.0
+
+# Testing
+pytest>=7.0.0
+hypothesis>=6.0.0
+
+# Essential data processing
+numpy>=1.24.0
+pandas>=2.0.0

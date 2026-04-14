@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clinical_study>
+    <study_info>
+        <title>Comparative Effectiveness of SGLT2 Inhibitors vs GLP-1 Receptor Agonists in Type 2 Diabetes: The COMPARE-DM Trial</title>
+        <authors>
+            <author>
+                <name>Prof. Jennifer Walsh</name>
+                <affiliation>Division of Endocrinology, University of Pennsylvania, Philadelphia, PA</affiliation>
+                <email>jwalsh@upenn.edu</email>
+            </author>
+            <author>
+                <name>Dr. Ahmed Hassan</name>
+                <affiliation>Department of Internal Medicine, Cleveland Clinic, Cleveland, OH</affiliation>
+                <email>hassana@ccf.org</email>
+            </author>
+            <author>
+                <name>Prof. Lisa Anderson</name>
+                <affiliation>Diabetes Research Institute, University of Miami, Miami, FL</affiliation>
+                <email>landerson@miami.edu</email>
+            </author>
+            <author>
+                <name>Dr. David Park</name>
+                <affiliation>Department of Endocrinology, Stanford University, Stanford, CA</affiliation>
+                <email>dpark@stanford.edu</email>
+            </author>
+        </authors>
+        <journal>New England Journal of Medicine</journal>
+        <publication_date>2024-02-22</publication_date>
+        <doi>10.1056/NEJMoa2401789</doi>
+        <study_type>randomized_controlled_trial</study_type>
+        <evidence_level>high</evidence_level>
+    </study_info>
+
+    <abstract>
+        <background>
+            Both SGLT2 inhibitors and GLP-1 receptor agonists are recommended as second-line therapy for type 2 diabetes, but direct comparative effectiveness data are limited. Current guidelines do not provide clear guidance on which class to prioritize.
+        </background>
+        <methods>
+            We randomly assigned 12,847 adults with type 2 diabetes inadequately controlled on metformin to receive either an SGLT2 inhibitor (empagliflozin 25 mg daily) or a GLP-1 receptor agonist (semaglutide 1 mg weekly). The primary endpoint was time to first occurrence of cardiovascular death, nonfatal myocardial infarction, or nonfatal stroke.
+        </methods>
+        <results>
+            **CONTRADICTORY FINDING:** SGLT2 inhibitors showed superior cardiovascular outcomes compared to GLP-1 receptor agonists (HR 0.78, 95% CI: 0.69-0.88, p&lt;0.001), contradicting current guidelines that consider both classes equivalent for cardiovascular protection. However, GLP-1 receptor agonists demonstrated superior weight loss and glycemic control.
+        </results>
+        <conclusions>
+            These findings suggest that SGLT2 inhibitors should be prioritized for cardiovascular protection, while GLP-1 receptor agonists may be preferred for weight management and glycemic control, challenging current equipoise recommendations.
+        </conclusions>
+    </abstract>
+
+    <main_findings>
+        <finding id="1">
+            <category>Primary Cardiovascular Endpoint</category>
+            <description>SGLT2 inhibitors reduced major adverse cardiovascular events by 22% compared to GLP-1 receptor agonists</description>
+            <hazard_ratio>0.78 (95% CI: 0.69-0.88)</hazard_ratio>
+            <p_value>&lt;0.001</p_value>
+            <number_needed_to_treat>67</number_needed_to_treat>
+            <contradicts_guidelines>true</contradicts_guidelines>
+            <guideline_contradicted>ADA/EASD 2022 Consensus Statement treating both classes as equivalent</guideline_contradicted>
+        </finding>
+
+        <finding id="2">
+            <category>Heart Failure Outcomes</category>
+            <description>SGLT2 inhibitors showed superior heart failure outcomes with 34% reduction in heart failure hospitalizations</description>
+            <hazard_ratio>0.66 (95% CI: 0.55-0.79)</hazard_ratio>
+            <p_value>&lt;0.001</p_value>
+            <number_needed_to_treat>45</number_needed_to_treat>
+            <clinical_significance>very_high</clinical_significance>
+        </finding>
+
+        <finding id="3">
+            <category>Weight Loss</category>
+            <description>GLP-1 receptor agonists achieved superior weight loss compared to SGLT2 inhibitors</description>
+            <weight_change_glp1>-8.7 ± 4.2 kg</weight_change_glp1>
+            <weight_change_sglt2>-3.1 ± 2.8 kg</weight_change_sglt2>
+            <difference>-5.6 kg (95% CI: -6.1 to -5.1)</difference>
+            <p_value>&lt;0.001</p_value>
+            <clinical_significance>high</clinical_significance>
+        </finding>
+
+        <finding id="4">
+            <category>Glycemic Control</category>
+            <description>GLP-1 receptor agonists provided superior HbA1c reduction</description>
+            <hba1c_change_glp1>-1.8 ± 0.9%</hba1c_change_glp1>
+            <hba1c_change_sglt2>-1.2 ± 0.7%</hba1c_change_sglt2>
+            <difference>-0.6% (95% CI: -0.7 to -0.5)</difference>
+            <p_value>&lt;0.001</p_value>
+        </finding>
+
+        <finding id="5">
+            <category>Kidney Outcomes</category>
+            <description>SGLT2 inhibitors showed superior kidney protection with 28% reduction in kidney disease progression</description>
+            <hazard_ratio>0.72 (95% CI: 0.61-0.85)</hazard_ratio>
+            <p_value>&lt;0.001</p_value>
+            <outcome_definition>Composite of sustained 40% decline in eGFR, end-stage kidney disease, or kidney death</outcome_definition>
+        </finding>
+
+        <finding id="6">
+            <category>Safety Profile</category>
+            <description>Different safety profiles with class-specific adverse events</description>
+            <sglt2_genital_infections>12.3% vs 2.1% (p&lt;0.001)</sglt2_genital_infections>
+            <glp1_gi_adverse_events>34.7% vs 8.9% (p&lt;0.001)</glp1_gi_adverse_events>
+            <sglt2_dka_risk>0.3% vs 0.1% (p=0.02)</sglt2_dka_risk>
+        </finding>
+    </main_findings>
+
+    <methodology>
+        <study_design>Multicenter, randomized, open-label, active-controlled trial</study_design>
+        <randomization>1:1 ratio, stratified by cardiovascular risk and baseline HbA1c</randomization>
+        <study_duration>Median follow-up 3.2 years</study_duration>
+        <study_sites>287 sites across North America, Europe, and Asia-Pacific</study_sites>
+
+        <inclusion_criteria>
+            <criterion>Adults aged 18-80 years with type 2 diabetes</criterion>
+            <criterion>HbA1c 7.0-10.5% on stable metformin therapy</criterion>
+            <criterion>eGFR ≥30 mL/min/1.73m²</criterion>
+            <criterion>High cardiovascular risk (established CVD or ≥2 risk factors)</criterion>
+        </inclusion_criteria>
+
+        <exclusion_criteria>
+            <criterion>Type 1 diabetes or secondary diabetes</criterion>
+            <criterion>Recent cardiovascular event (&lt;3 months)</criterion>
+            <criterion>Severe heart failure (NYHA Class IV)</criterion>
+            <criterion>History of diabetic ketoacidosis</criterion>
+            <criterion>Pregnancy or breastfeeding</criterion>
+            <criterion>Previous intolerance to study medications</criterion>
+        </exclusion_criteria>
+
+        <interventions>
+            <sglt2_group>
+                <medication>Empagliflozin 25 mg once daily</medication>
+                <participants>6,423</participants>
+                <background_therapy>Metformin (stable dose)</background_therapy>
+                <rescue_therapy>Insulin if HbA1c >9% after 6 months</rescue_therapy>
+            </sglt2_group>
+            <glp1_group>
+                <medication>Semaglutide 1 mg subcutaneous weekly</medication>
+                <participants>6,424</participants>
+                <background_therapy>Metformin (stable dose)</background_therapy>
+                <rescue_therapy>Insulin if HbA1c >9% after 6 months</rescue_therapy>
+            </glp1_group>
+        </interventions>
+
+        <primary_endpoint>
+            <definition>Time to first occurrence of cardiovascular death, nonfatal myocardial infarction, or nonfatal stroke</definition>
+            <adjudication>Independent clinical events committee, blinded to treatment assignment</adjudication>
+        </primary_endpoint>
+
+        <secondary_endpoints>
+            <endpoint>Individual components of primary endpoint</endpoint>
+            <endpoint>Heart failure hospitalization</endpoint>
+            <endpoint>Composite kidney outcome</endpoint>
+            <endpoint>All-cause mortality</endpoint>
+            <endpoint>Change in HbA1c from baseline</endpoint>
+            <endpoint>Change in body weight from baseline</endpoint>
+            <endpoint>Change in systolic blood pressure</endpoint>
+            <endpoint>Safety outcomes and adverse events</endpoint>
+        </secondary_endpoints>
+    </methodology>
+
+    <baseline_characteristics>
+        <demographics>
+            <mean_age>64.2 ± 9.8 years</mean_age>
+            <female_percentage>43.7%</female_percentage>
+            <race_ethnicity>
+                <white>68.4%</white>
+                <black>12.3%</black>
+                <hispanic>11.2%</hispanic>
+                <asian>6.8%</asian>
+                <other>1.3%</other>
+            </race_ethnicity>
+        </demographics>
+
+        <clinical_characteristics>
+            <mean_diabetes_duration>8.7 ± 6.2 years</mean_diabetes_duration>
+            <mean_hba1c>8.1 ± 0.9%</mean_hba1c>
+            <mean_bmi>32.4 ± 5.8 kg/m²</mean_bmi>
+            <mean_systolic_bp>142.3 ± 18.7 mmHg</mean_systolic_bp>
+            <mean_egfr>78.4 ± 22.1 mL/min/1.73m²</mean_egfr>
+        </clinical_characteristics>
+
+        <cardiovascular_risk_factors>
+            <established_cvd>34.8%</established_cvd>
+            <hypertension>78.9%</hypertension>
+            <dyslipidemia>67.3%</dyslipidemia>
+            <current_smoking>18.4%</current_smoking>
+            <family_history_cad>45.2%</family_history_cad>
+        </cardiovascular_risk_factors>
+
+        <concomitant_medications>
+            <metformin>100%</metformin>
+            <ace_inhibitor_arb>72.3%</ace_inhibitor_arb>
+            <statin>68.9%</statin>
+            <aspirin>45.7%</aspirin>
+            <beta_blocker>34.2%</beta_blocker>
+        </concomitant_medications>
+    </baseline_characteristics>
+
+    <results_detailed>
+        <primary_endpoint_results>
+            <sglt2_group>
+                <events>234</events>
+                <event_rate>12.1 per 1000 patient-years</event_rate>
+                <participants>6,423</participants>
+            </sglt2_group>
+            <glp1_group>
+                <events>301</events>
+                <event_rate>15.6 per 1000 patient-years</event_rate>
+                <participants>6,424</participants>
+            </glp1_group>
+            <hazard_ratio>0.78 (95% CI: 0.69-0.88)</hazard_ratio>
+            <p_value>&lt;0.001</p_value>
+            <number_needed_to_treat>67</number_needed_to_treat>
+            <absolute_risk_reduction>3.5 per 1000 patient-years</absolute_risk_reduction>
+        </primary_endpoint_results>
+
+        <individual_cv_components>
+            <cardiovascular_death>
+                <sglt2_events>89</sglt2_events>
+                <glp1_events>123</glp1_events>
+                <hazard_ratio>0.72 (95% CI: 0.55-0.95)</hazard_ratio>
+                <p_value>0.02</p_value>
+            </cardiovascular_death>
+            <nonfatal_mi>
+                <sglt2_events>98</sglt2_events>
+                <glp1_events>112</glp1_events>
+                <hazard_ratio>0.88 (95% CI: 0.67-1.15)</hazard_ratio>
+                <p_value>0.34</p_value>
+            </nonfatal_mi>
+            <nonfatal_stroke>
+                <sglt2_events>67</sglt2_events>
+                <glp1_events>89</glp1_events>
+                <hazard_ratio>0.75 (95% CI: 0.55-1.03)</hazard_ratio>
+                <p_value>0.08</p_value>
+            </nonfatal_stroke>
+        </individual_cv_components>
+
+        <heart_failure_outcomes>
+            <hf_hospitalization>
+                <sglt2_events>78</sglt2_events>
+                <glp1_events>118</glp1_events>
+                <hazard_ratio>0.66 (95% CI: 0.55-0.79)</hazard_ratio>
+                <p_value>&lt;0.001</p_value>
+                <number_needed_to_treat>45</number_needed_to_treat>
+            </hf_hospitalization>
+            <hf_death>
+                <sglt2_events>23</sglt2_events>
+                <glp1_events>34</glp1_events>
+                <hazard_ratio>0.68 (95% CI: 0.40-1.15)</hazard_ratio>
+                <p_value>0.15</p_value>
+            </hf_death>
+        </heart_failure_outcomes>
+
+        <kidney_outcomes>
+            <composite_kidney_outcome>
+                <sglt2_events>156</sglt2_events>
+                <glp1_events>217</glp1_events>
+                <hazard_ratio>0.72 (95% CI: 0.61-0.85)</hazard_ratio>
+                <p_value>&lt;0.001</p_value>
+                <definition>40% decline in eGFR, ESKD, or kidney death</definition>
+            </composite_kidney_outcome>
+            <egfr_decline>
+                <sglt2_change>-2.1 ± 8.7 mL/min/1.73m²</sglt2_change>
+                <glp1_change>-4.3 ± 9.2 mL/min/1.73m²</glp1_change>
+                <difference>2.2 mL/min/1.73m² (95% CI: 1.8-2.6)</difference>
+                <p_value>&lt;0.001</p_value>
+            </egfr_decline>
+        </kidney_outcomes>
+
+        <glycemic_outcomes>
+            <hba1c_change>
+                <sglt2_change>-1.2 ± 0.7%</sglt2_change>
+                <glp1_change>-1.8 ± 0.9%</glp1_change>
+                <difference>-0.6% (95% CI: -0.7 to -0.5)</difference>
+                <p_value>&lt;0.001</p_value>
+            </hba1c_change>
+            <hba1c_target_achievement>
+                <sglt2_less_than_7>67.8%</sglt2_less_than_7>
+                <glp1_less_than_7>78.9%</glp1_less_than_7>
+                <difference>11.1% (95% CI: 9.2-13.0)</difference>
+                <p_value>&lt;0.001</p_value>
+            </hba1c_target_achievement>
+        </glycemic_outcomes>
+
+        <weight_outcomes>
+            <weight_change>
+                <sglt2_change>-3.1 ± 2.8 kg</sglt2_change>
+                <glp1_change>-8.7 ± 4.2 kg</glp1_change>
+                <difference>-5.6 kg (95% CI: -6.1 to -5.1)</difference>
+                <p_value>&lt;0.001</p_value>
+            </weight_change>
+            <weight_loss_5_percent>
+                <sglt2_percentage>34.7%</sglt2_percentage>
+                <glp1_percentage>72.3%</glp1_percentage>
+                <difference>37.6% (95% CI: 35.1-40.1)</difference>
+                <p_value>&lt;0.001</p_value>
+            </weight_loss_5_percent>
+            <weight_loss_10_percent>
+                <sglt2_percentage>12.4%</sglt2_percentage>
+                <glp1_percentage>45.8%</glp1_percentage>
+                <difference>33.4% (95% CI: 30.9-35.9)</difference>
+                <p_value>&lt;0.001</p_value>
+            </weight_loss_10_percent>
+        </weight_outcomes>
+
+        <blood_pressure_outcomes>
+            <systolic_bp_change>
+                <sglt2_change>-4.7 ± 12.3 mmHg</sglt2_change>
+                <glp1_change>-2.1 ± 11.8 mmHg</glp1_change>
+                <difference>-2.6 mmHg (95% CI: -3.4 to -1.8)</difference>
+                <p_value>&lt;0.001</p_value>
+            </systolic_bp_change>
+            <diastolic_bp_change>
+                <sglt2_change>-2.3 ± 7.8 mmHg</sglt2_change>
+                <glp1_change>-1.1 ± 7.2 mmHg</glp1_change>
+                <difference>-1.2 mmHg (95% CI: -1.7 to -0.7)</difference>
+                <p_value>&lt;0.001</p_value>
+            </diastolic_bp_change>
+        </blood_pressure_outcomes>
+    </results_detailed>
+
+    <safety_outcomes>
+        <overall_safety>
+            <sglt2_any_ae>4,234 (65.9%)</sglt2_any_ae>
+            <glp1_any_ae>4,567 (71.1%)</glp1_any_ae>
+            <relative_risk>0.93 (95% CI: 0.90-0.96)</relative_risk>
+            <p_value>&lt;0.001</p_value>
+        </overall_safety>
+
+        <serious_adverse_events>
+            <sglt2_serious_ae>789 (12.3%)</sglt2_serious_ae>
+            <glp1_serious_ae>834 (13.0%)</glp1_serious_ae>
+            <relative_risk>0.95 (95% CI: 0.86-1.04)</relative_risk>
+            <p_value>0.28</p_value>
+        </serious_adverse_events>
+
+        <class_specific_adverse_events>
+            <genital_infections>
+                <sglt2_events>789 (12.3%)</sglt2_events>
+                <glp1_events>135 (2.1%)</glp1_events>
+                <relative_risk>5.85 (95% CI: 4.89-7.00)</relative_risk>
+                <p_value>&lt;0.001</p_value>
+                <severity>Mostly mild to moderate, resolved with treatment</severity>
+            </genital_infections>
+
+            <gastrointestinal_events>
+                <sglt2_events>571 (8.9%)</sglt2_events>
+                <glp1_events>2,229 (34.7%)</glp1_events>
+                <relative_risk>3.90 (95% CI: 3.57-4.27)</relative_risk>
+                <p_value>&lt;0.001</p_value>
+                <types>Nausea (18.9%), vomiting (12.3%), diarrhea (15.6%)</types>
+            </gastrointestinal_events>
+
+            <diabetic_ketoacidosis>
+                <sglt2_events>19 (0.3%)</sglt2_events>
+                <glp1_events>6 (0.1%)</glp1_events>
+                <relative_risk>3.17 (95% CI: 1.25-8.03)</relative_risk>
+                <p_value>0.02</p_value>
+                <note>All cases resolved with appropriate treatment</note>
+            </diabetic_ketoacidosis>
+
+            <hypoglycemia>
+                <sglt2_mild>234 (3.6%)</sglt2_mild>
+                <glp1_mild>189 (2.9%)</glp1_mild>
+                <sglt2_severe>12 (0.2%)</sglt2_severe>
+                <glp1_severe>8 (0.1%)</glp1_severe>
+                <note>Low rates in both groups due to metformin background therapy</note>
+            </hypoglycemia>
+
+            <volume_depletion>
+                <sglt2_events>156 (2.4%)</sglt2_events>
+                <glp1_events>67 (1.0%)</glp1_events>
+                <relative_risk>2.33 (95% CI: 1.75-3.10)</relative_risk>
+                <p_value>&lt;0.001</p_value>
+            </volume_depletion>
+
+            <pancreatitis>
+                <sglt2_events>3 (0.05%)</sglt2_events>
+                <glp1_events>8 (0.12%)</glp1_events>
+                <relative_risk>2.67 (95% CI: 0.71-10.0)</relative_risk>
+                <p_value>0.14</p_value>
+            </pancreatitis>
+        </class_specific_adverse_events>
+
+        <discontinuation_rates>
+            <sglt2_discontinuation>567 (8.8%)</sglt2_discontinuation>
+            <glp1_discontinuation>789 (12.3%)</glp1_discontinuation>
+            <relative_risk>0.72 (95% CI: 0.64-0.81)</relative_risk>
+            <p_value>&lt;0.001</p_value>
+            <main_reasons_sglt2>Genital infections (34%), volume depletion (18%), patient preference (23%)</main_reasons_sglt2>
+            <main_reasons_glp1>GI intolerance (67%), injection site reactions (12%), patient preference (15%)</main_reasons_glp1>
+        </discontinuation_rates>
+    </safety_outcomes>
+
+    <subgroup_analyses>
+        <cardiovascular_risk_subgroups>
+            <established_cvd>
+                <sglt2_events>156</sglt2_events>
+                <glp1_events>198</glp1_events>
+                <hazard_ratio>0.74 (95% CI: 0.60-0.91)</hazard_ratio>
+                <p_value>0.005</p_value>
+                <interaction_p>0.23</interaction_p>
+            </established_cvd>
+            <high_risk_no_cvd>
+                <sglt2_events>78</sglt2_events>
+                <glp1_events>103</glp1_events>
+                <hazard_ratio>0.83 (95% CI: 0.62-1.11)</hazard_ratio>
+                <p_value>0.21</p_value>
+            </high_risk_no_cvd>
+        </cardiovascular_risk_subgroups>
+
+        <age_subgroups>
+            <age_less_65>
+                <sglt2_events>123</sglt2_events>
+                <glp1_events>145</glp1_events>
+                <hazard_ratio>0.81 (95% CI: 0.64-1.03)</hazard_ratio>
+                <p_value>0.08</p_value>
+            </age_less_65>
+            <age_65_plus>
+                <sglt2_events>111</sglt2_events>
+                <glp1_events>156</glp1_events>
+                <hazard_ratio>0.75 (95% CI: 0.59-0.96)</hazard_ratio>
+                <p_value>0.02</p_value>
+                <interaction_p>0.67</interaction_p>
+            </age_65_plus>
+        </age_subgroups>
+
+        <kidney_function_subgroups>
+            <egfr_60_plus>
+                <sglt2_events>167</sglt2_events>
+                <glp1_events>212</glp1_events>
+                <hazard_ratio>0.79 (95% CI: 0.65-0.96)</hazard_ratio>
+                <p_value>0.02</p_value>
+            </egfr_60_plus>
+            <egfr_30_59>
+                <sglt2_events>67</sglt2_events>
+                <glp1_events>89</glp1_events>
+                <hazard_ratio>0.76 (95% CI: 0.55-1.05)</hazard_ratio>
+                <p_value>0.10</p_value>
+                <interaction_p>0.78</interaction_p>
+            </egfr_30_59>
+        </kidney_function_subgroups>
+
+        <bmi_subgroups>
+            <bmi_less_30>
+                <weight_loss_sglt2>-2.1 ± 2.1 kg</weight_loss_sglt2>
+                <weight_loss_glp1>-6.8 ± 3.4 kg</weight_loss_glp1>
+                <difference>-4.7 kg</difference>
+            </bmi_less_30>
+            <bmi_30_35>
+                <weight_loss_sglt2>-3.4 ± 2.8 kg</weight_loss_sglt2>
+                <weight_loss_glp1>-9.2 ± 4.1 kg</weight_loss_glp1>
+                <difference>-5.8 kg</difference>
+            </bmi_30_35>
+            <bmi_35_plus>
+                <weight_loss_sglt2>-3.8 ± 3.2 kg</weight_loss_sglt2>
+                <weight_loss_glp1>-10.1 ± 4.8 kg</weight_loss_glp1>
+                <difference>-6.3 kg</difference>
+            </bmi_35_plus>
+        </bmi_subgroups>
+    </subgroup_analyses>
+
+    <discussion>
+        <key_findings>
+            <finding>
+                <title>Cardiovascular Superiority of SGLT2 Inhibitors</title>
+                <content>**CONTRADICTS CURRENT GUIDELINES:** SGLT2 inhibitors demonstrated superior cardiovascular outcomes compared to GLP-1 receptor agonists, with a 22% reduction in major adverse cardiovascular events. This contradicts current ADA/EASD consensus statements that treat both classes as equivalent for cardiovascular protection.</content>
+            </finding>
+            <finding>
+                <title>Heart Failure Benefit</title>
+                <content>The 34% reduction in heart failure hospitalizations with SGLT2 inhibitors represents a clinically meaningful difference that should influence treatment selection, particularly in patients with heart failure risk factors.</content>
+            </finding>
+            <finding>
+                <title>Kidney Protection</title>
+                <content>SGLT2 inhibitors provided superior kidney protection with 28% reduction in kidney disease progression, supporting their use in patients with diabetic kidney disease.</content>
+            </finding>
+            <finding>
+                <title>Metabolic Advantages of GLP-1 RAs</title>
+                <content>GLP-1 receptor agonists demonstrated superior weight loss (5.6 kg greater) and glycemic control (0.6% greater HbA1c reduction), supporting their use when these are primary treatment goals.</content>
+            </finding>
+        </key_findings>
+
+        <clinical_implications>
+            <implication>
+                <recommendation>Prioritize SGLT2 inhibitors for patients with established cardiovascular disease or high cardiovascular risk</recommendation>
+                <strength>Strong</strength>
+                <evidence_level>High</evidence_level>
+                <rationale>Superior cardiovascular outcomes and heart failure protection</rationale>
+            </implication>
+            <implication>
+                <recommendation>Consider GLP-1 receptor agonists for patients where weight loss and glycemic control are primary goals</recommendation>
+                <strength>Strong</strength>
+                <evidence_level>High</evidence_level>
+                <rationale>Superior weight loss and HbA1c reduction</rationale>
+            </implication>
+            <implication>
+                <recommendation>Revise guidelines to acknowledge differential benefits rather than treating classes as equivalent</recommendation>
+                <strength>Strong</strength>
+                <evidence_level>High</evidence_level>
+                <rationale>Clear differences in cardiovascular and metabolic outcomes</rationale>
+            </implication>
+        </clinical_implications>
+
+        <guideline_impact>
+            <current_guidelines>
+                <ada_easd_2022>Both SGLT2 inhibitors and GLP-1 receptor agonists are considered equivalent second-line options with cardiovascular benefit</ada_easd_2022>
+                <aace_2023>Similar recommendation treating both classes as equivalent for cardiovascular protection</aace_2023>
+            </current_guidelines>
+            <contradictory_evidence>
+                <cardiovascular_outcomes>SGLT2 inhibitors showed superior cardiovascular protection (HR 0.78 vs 1.0)</cardiovascular_outcomes>
+                <heart_failure>SGLT2 inhibitors provided greater heart failure benefit (HR 0.66 vs 1.0)</heart_failure>
+                <kidney_protection>SGLT2 inhibitors offered superior kidney protection (HR 0.72 vs 1.0)</kidney_protection>
+            </contradictory_evidence>
+            <proposed_revision>
+                <primary_cv_protection>SGLT2 inhibitors should be preferred for cardiovascular and heart failure protection</primary_cv_protection>
+                <primary_weight_glycemic>GLP-1 receptor agonists should be preferred for weight loss and glycemic control</primary_weight_glycemic>
+                <individualized_approach>Treatment selection should be based on patient-specific goals and comorbidities</individualized_approach>
+            </proposed_revision>
+        </guideline_impact>
+
+        <mechanistic_insights>
+            <sglt2_mechanisms>
+                <hemodynamic>Improved cardiac preload and afterload through natriuresis and diuresis</hemodynamic>
+                <metabolic>Ketone body production and improved cardiac metabolism</metabolic>
+                <anti_inflammatory>Reduced systemic inflammation and oxidative stress</anti_inflammatory>
+                <kidney_protection>Direct nephroprotective effects independent of glucose lowering</kidney_protection>
+            </sglt2_mechanisms>
+            <glp1_mechanisms>
+                <weight_loss>Central appetite suppression and delayed gastric emptying</weight_loss>
+                <glycemic_control>Glucose-dependent insulin secretion and glucagon suppression</glycemic_control>
+                <cardiovascular>Modest cardiovascular benefits through weight loss and glycemic improvement</cardiovascular>
+            </glp1_mechanisms>
+        </mechanistic_insights>
+
+        <limitations>
+            <limitation>Open-label design may have introduced bias in outcome assessment</limitation>
+            <limitation>Single agents studied; results may not apply to all drugs within each class</limitation>
+            <limitation>Median follow-up of 3.2 years may not capture long-term differences</limitation>
+            <limitation>Predominantly white population may limit generalizability</limitation>
+            <limitation>Patients with severe kidney disease (eGFR &lt;30) were excluded</limitation>
+        </limitations>
+    </discussion>
+
+    <conclusions>
+        <primary_conclusion>
+            **CONTRADICTS CURRENT GUIDELINES:** SGLT2 inhibitors demonstrated superior cardiovascular outcomes compared to GLP-1 receptor agonists in patients with type 2 diabetes, challenging current guidelines that treat both classes as equivalent for cardiovascular protection.
+        </primary_conclusion>
+        <secondary_conclusions>
+            <conclusion>SGLT2 inhibitors should be prioritized for patients with cardiovascular disease or heart failure risk</conclusion>
+            <conclusion>GLP-1 receptor agonists remain superior for weight loss and glycemic control</conclusion>
+            <conclusion>Treatment selection should be individualized based on patient-specific goals and comorbidities</conclusion>
+            <conclusion>Current guidelines require revision to acknowledge differential class benefits</conclusion>
+        </secondary_conclusions>
+        <clinical_impact>
+            These findings will likely influence diabetes treatment algorithms worldwide and may lead to preferential use of SGLT2 inhibitors for cardiovascular protection while reserving GLP-1 receptor agonists for patients prioritizing weight loss and glycemic control.
+        </clinical_impact>
+    </conclusions>
+
+    <funding>
+        <source>National Institute of Diabetes and Digestive and Kidney Diseases</source>
+        <grant_number>R01-DK123456</grant_number>
+        <amount>$8.7 million</amount>
+        <additional_funding>American Diabetes Association Clinical Research Award</additional_funding>
+    </funding>
+
+    <conflicts_of_interest>
+        <author name="Prof. Jennifer Walsh">Research grants from Novo Nordisk, Boehringer Ingelheim (unrelated to this study)</author>
+        <author name="Dr. Ahmed Hassan">Consulting fees from Eli Lilly, Sanofi</author>
+        <author name="Prof. Lisa Anderson">None declared</author>
+        <author name="Dr. David Park">Speaker fees from Merck, Janssen</author>
+    </conflicts_of_interest>
+
+    <editorial_note>
+        <note>This head-to-head comparison provides crucial evidence for treatment selection in type 2 diabetes. The findings challenge current equipoise recommendations and support a more nuanced, goal-directed approach to second-line therapy selection.</note>
+        <accompanying_editorial>See accompanying editorial by Dr. John Buse, "Choosing Between SGLT2 Inhibitors and GLP-1 Receptor Agonists: The End of Equipoise?" (pages 567-569)</accompanying_editorial>
+    </editorial_note>
+</clinical_study>
