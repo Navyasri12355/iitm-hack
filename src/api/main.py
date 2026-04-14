@@ -1,525 +1,423 @@
 """
-FastAPI main application for Clinical Evidence Copilot.
+Clinical Evidence Copilot — FastAPI Application
 
-This module implements the REST API endpoints for:
-- /query endpoint for clinical questions
-- /documents endpoint for document management  
-- /recommendations endpoint for tracking changes
-
-Validates Requirements 5.1, 5.3:
-- Provide API endpoints for seamless integration
-- Format outputs compatible with electronic health record systems
+Real-time clinical evidence retrieval and recommendation system.
 """
 
 import logging
-from contextlib import asynccontextmanager
-from typing import List, Optional, Dict, Any
-from datetime import datetime
-
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-import uvicorn
 import json
+import asyncio
+import os
+from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+from pathlib import Path
+
+import uvicorn
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, UploadFile, File, Form, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
 from ..config import get_settings
 from ..models.core import (
-    ClinicalQuery, ClinicalRecommendation, ParsedDocument, 
-    UrgencyLevel, PatientContext, Evidence
+    ClinicalQuery, ClinicalRecommendation, UrgencyLevel,
+    ParsedDocument, DocumentType
 )
-from .models import (
-    QueryRequest, QueryResponse, DocumentUploadRequest, DocumentResponse,
-    RecommendationHistoryResponse, HealthCheckResponse, ErrorResponse,
-    NotificationRequest, NotificationResponse
-)
-from .services import ClinicalService
-from .websocket import websocket_manager, WebSocketManager
+from ..ingestion.pipeline import get_vector_store, get_pipeline, init_pipeline
+from ..reasoning.engine import get_engine
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s"
+)
 logger = logging.getLogger(__name__)
 
-# Global service instance
-clinical_service: Optional[ClinicalService] = None
+# ---------------------------------------------------------------------------
+# WebSocket connection manager
+# ---------------------------------------------------------------------------
 
+class ConnectionManager:
+    def __init__(self):
+        self._connections: Dict[str, WebSocket] = {}
+        self._lock = asyncio.Lock()
+
+    async def connect(self, ws: WebSocket, client_id: str):
+        await ws.accept()
+        async with self._lock:
+            self._connections[client_id] = ws
+        logger.info(f"WS connected: {client_id} ({len(self._connections)} total)")
+
+    async def disconnect(self, client_id: str):
+        async with self._lock:
+            self._connections.pop(client_id, None)
+        logger.info(f"WS disconnected: {client_id}")
+
+    async def broadcast(self, message: Dict[str, Any]):
+        payload = json.dumps(message, default=str)
+        async with self._lock:
+            dead = []
+            for cid, ws in self._connections.items():
+                try:
+                    await ws.send_text(payload)
+                except Exception:
+                    dead.append(cid)
+            for cid in dead:
+                self._connections.pop(cid, None)
+
+    async def send_to(self, client_id: str, message: Dict[str, Any]):
+        async with self._lock:
+            ws = self._connections.get(client_id)
+        if ws:
+            try:
+                await ws.send_text(json.dumps(message, default=str))
+            except Exception:
+                await self.disconnect(client_id)
+
+    @property
+    def connection_count(self) -> int:
+        return len(self._connections)
+
+
+ws_manager = ConnectionManager()
+
+# ---------------------------------------------------------------------------
+# Request/Response Models
+# ---------------------------------------------------------------------------
+
+class QueryRequest(BaseModel):
+    query_text: str = Field(..., min_length=3, max_length=2000)
+    clinician_id: str = Field(default="anonymous")
+    urgency_level: UrgencyLevel = UrgencyLevel.ROUTINE
+    patient_context: Optional[Dict[str, Any]] = None
+
+
+class DocumentUploadRequest(BaseModel):
+    title: str
+    content: str
+    authors: List[str] = Field(default_factory=list)
+    source: str = ""
+    document_type: str = "research_paper"
+
+
+class QueryResponse(BaseModel):
+    query_id: str
+    recommendation: Dict[str, Any]
+    processing_time_seconds: float
+    document_count: int
+
+
+# ---------------------------------------------------------------------------
+# Application lifespan
+# ---------------------------------------------------------------------------
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan manager for startup and shutdown."""
-    global clinical_service
-    
-    # Startup
-    logger.info("Starting Clinical Evidence Copilot API...")
+    settings = get_settings()
+    logger.info("🚀 Starting Clinical Evidence Copilot...")
+
+    if not settings.openai_api_key:
+        logger.warning("⚠️  OPENAI_API_KEY not set — LLM features will use fallback mode")
+
+    # Initialize Pathway ingestion pipeline
     try:
-        clinical_service = ClinicalService()
-        await clinical_service.initialize()
-        logger.info("Clinical service initialized successfully")
+        pipeline = init_pipeline(
+            documents_path=settings.documents_path,
+            openai_api_key=settings.openai_api_key or "",
+            embedding_model=settings.embedding_model,
+        )
+        logger.info(f"✅ Pathway pipeline watching: {settings.documents_path}")
     except Exception as e:
-        logger.error(f"Failed to initialize clinical service: {e}")
-        raise
-    
+        logger.error(f"Pipeline init failed: {e}")
+
     yield
-    
+
     # Shutdown
-    logger.info("Shutting down Clinical Evidence Copilot API...")
-    if clinical_service:
-        await clinical_service.cleanup()
+    pipeline = get_pipeline()
+    if pipeline:
+        pipeline.stop()
+    logger.info("👋 Clinical Evidence Copilot shut down")
 
 
-# Create FastAPI application
+# ---------------------------------------------------------------------------
+# FastAPI app
+# ---------------------------------------------------------------------------
+
 app = FastAPI(
-    title="Clinical Evidence Copilot API",
-    description="Real-time evidence-backed medical information system",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
-    lifespan=lifespan
+    title="Clinical Evidence Copilot",
+    description="Real-time evidence-backed clinical decision support",
+    version="2.0.0",
+    lifespan=lifespan,
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Mount static files
+static_dir = Path(__file__).parent.parent.parent / "static"
+static_dir.mkdir(exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-def get_clinical_service() -> ClinicalService:
-    """Dependency to get the clinical service instance."""
-    if clinical_service is None:
+
+# ---------------------------------------------------------------------------
+# API Routes
+# ---------------------------------------------------------------------------
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    index_file = static_dir / "index.html"
+    if index_file.exists():
+        return HTMLResponse(index_file.read_text())
+    return HTMLResponse("<h1>Clinical Evidence Copilot</h1><p>Frontend not found.</p>")
+
+
+@app.get("/health")
+async def health():
+    store = get_vector_store()
+    pipeline = get_pipeline()
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "version": "2.0.0",
+        "documents_indexed": store.document_count,
+        "pipeline_running": pipeline is not None and pipeline._running,
+        "websocket_connections": ws_manager.connection_count,
+    }
+
+
+@app.post("/api/query", response_model=QueryResponse)
+async def process_query(request: QueryRequest):
+    """Process a clinical query and return evidence-backed recommendations."""
+    start = datetime.now()
+    settings = get_settings()
+
+    if not settings.openai_api_key:
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Clinical service not initialized"
+            status_code=503,
+            detail="OpenAI API key not configured. Set OPENAI_API_KEY in environment."
         )
-    return clinical_service
 
+    query_id = f"q_{int(start.timestamp())}_{request.clinician_id[:8]}"
 
-@app.get("/health", response_model=HealthCheckResponse)
-async def health_check():
-    """Health check endpoint."""
-    return HealthCheckResponse(
-        status="healthy",
-        timestamp=datetime.now(),
-        version="1.0.0"
+    query = ClinicalQuery(
+        id=query_id,
+        query_text=request.query_text,
+        clinician_id=request.clinician_id,
+        urgency_level=request.urgency_level,
+        patient_context=request.patient_context,
+        timestamp=start,
+    )
+
+    try:
+        engine = get_engine()
+        recommendation = engine.generate(query)
+    except Exception as e:
+        logger.error(f"Recommendation generation failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Reasoning engine error: {str(e)}")
+
+    processing_time = (datetime.now() - start).total_seconds()
+
+    # Broadcast to all connected clients
+    await ws_manager.broadcast({
+        "type": "new_recommendation",
+        "query_id": query_id,
+        "query_text": request.query_text[:100],
+        "confidence": recommendation.confidence_score,
+        "evidence_count": len(recommendation.supporting_evidence),
+        "timestamp": datetime.now().isoformat(),
+    })
+
+    rec_dict = recommendation.model_dump()
+    # Make evidence serializable
+    rec_dict["supporting_evidence"] = [e.model_dump() for e in recommendation.supporting_evidence]
+
+    return QueryResponse(
+        query_id=query_id,
+        recommendation=rec_dict,
+        processing_time_seconds=round(processing_time, 2),
+        document_count=get_vector_store().document_count,
     )
 
 
-@app.post("/query", response_model=QueryResponse)
-async def process_clinical_query(
-    request: QueryRequest,
-    background_tasks: BackgroundTasks,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """
-    Process a clinical query and return evidence-backed recommendations.
-    
-    This endpoint implements the core functionality for clinicians to submit
-    medical questions and receive real-time, evidence-based responses.
-    
-    Validates Requirements 1.1, 1.2, 1.3, 1.4:
-    - Provide evidence-backed answers within 30 seconds
-    - Cite specific medical literature sources with publication dates
-    - Rank recommendations based on current evidence strength
-    - Flag contradictions and explain differences
-    """
+@app.get("/api/documents")
+async def list_documents(limit: int = 50, offset: int = 0):
+    """List all indexed documents."""
+    store = get_vector_store()
+    docs = store.list_documents()
+    return {
+        "documents": docs[offset:offset + limit],
+        "total": len(docs),
+        "limit": limit,
+        "offset": offset,
+    }
+
+
+@app.post("/api/documents")
+async def upload_document(request: DocumentUploadRequest):
+    """Upload and index a new document."""
+    settings = get_settings()
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=503, detail="OpenAI API key required for indexing")
+
+    pipeline = get_pipeline()
+    if not pipeline:
+        raise HTTPException(status_code=503, detail="Ingestion pipeline not running")
+
+    timestamp = int(datetime.now().timestamp())
+    filename = f"upload_{timestamp}_{request.title[:30].replace(' ', '_').lower()}.txt"
+
+    # Build document content
+    content_parts = []
+    if request.title:
+        content_parts.append(f"# {request.title}\n")
+    if request.authors:
+        content_parts.append(f"Authors: {', '.join(request.authors)}\n")
+    if request.source:
+        content_parts.append(f"Source: {request.source}\n")
+    content_parts.append(f"Document Type: {request.document_type}\n\n")
+    content_parts.append(request.content)
+
+    full_content = "\n".join(content_parts)
+
     try:
-        logger.info(f"Processing clinical query from clinician {request.clinician_id}")
-        
-        # Create ClinicalQuery object
-        clinical_query = ClinicalQuery(
-            id=f"query_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{request.clinician_id}",
-            query_text=request.query_text,
-            clinician_id=request.clinician_id,
-            patient_context=request.patient_context,
-            urgency_level=request.urgency_level,
-            timestamp=datetime.now()
-        )
-        
-        # Process the query
-        recommendation = await service.process_query(clinical_query)
-        
-        # Schedule background tasks for notifications if needed
-        if recommendation.change_reason:
-            background_tasks.add_task(
-                service.notify_recommendation_change,
-                recommendation
-            )
-            # Also notify via WebSocket
-            background_tasks.add_task(
-                websocket_manager.notify_recommendation_change,
-                recommendation,
-                clinical_query
-            )
-        
-        # Format response for EHR compatibility
-        response = QueryResponse(
-            query_id=clinical_query.id,
-            recommendation=recommendation,
-            processing_time_seconds=(datetime.now() - clinical_query.timestamp).total_seconds(),
-            citations=service.get_citations_for_recommendation(recommendation),
-            reasoning_steps=service.get_reasoning_steps(recommendation)
-        )
-        
-        logger.info(f"Successfully processed query {clinical_query.id} in {response.processing_time_seconds:.2f}s")
-        return response
-        
+        doc_id = pipeline.ingest_document(full_content, filename)
     except Exception as e:
-        logger.error(f"Error processing clinical query: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error processing clinical query: {str(e)}"
-        )
+        logger.error(f"Ingestion failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Ingestion error: {str(e)}")
+
+    # Broadcast document addition
+    await ws_manager.broadcast({
+        "type": "document_indexed",
+        "doc_id": doc_id,
+        "title": request.title,
+        "timestamp": datetime.now().isoformat(),
+        "document_count": get_vector_store().document_count,
+    })
+
+    return {
+        "id": doc_id,
+        "title": request.title,
+        "message": "Document indexed successfully",
+        "document_count": get_vector_store().document_count,
+    }
 
 
-@app.get("/documents", response_model=List[DocumentResponse])
-async def list_documents(
-    limit: int = 100,
-    offset: int = 0,
-    document_type: Optional[str] = None,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """
-    List medical documents in the knowledge base.
-    
-    Provides document management capabilities for administrators
-    to view and manage the medical literature collection.
-    """
+@app.post("/api/documents/upload")
+async def upload_file(file: UploadFile = File(...)):
+    """Upload a file for indexing."""
+    settings = get_settings()
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=503, detail="OpenAI API key required")
+
+    pipeline = get_pipeline()
+    if not pipeline:
+        raise HTTPException(status_code=503, detail="Pipeline not running")
+
+    content = await file.read()
     try:
-        documents = await service.list_documents(
-            limit=limit,
-            offset=offset,
-            document_type=document_type
-        )
-        
-        response = [
-            DocumentResponse(
-                id=doc.id,
-                title=doc.title,
-                authors=doc.authors,
-                publication_date=doc.publication_date,
-                document_type=doc.document_type,
-                source=doc.source,
-                credibility_score=doc.credibility_score,
-                indexed_at=doc.metadata.get('indexed_at', datetime.now())
-            )
-            for doc in documents
-        ]
-        
-        return response
-        
+        text = content.decode("utf-8", errors="replace")
     except Exception as e:
-        logger.error(f"Error listing documents: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error listing documents: {str(e)}"
-        )
+        raise HTTPException(status_code=400, detail=f"Could not read file: {e}")
 
+    if len(text.strip()) < 50:
+        raise HTTPException(status_code=400, detail="File content too short")
 
-@app.post("/documents", response_model=DocumentResponse)
-async def upload_document(
-    request: DocumentUploadRequest,
-    background_tasks: BackgroundTasks,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """
-    Upload a new medical document to the knowledge base.
-    
-    Allows administrators to add new medical literature that will be
-    processed and indexed for use in clinical recommendations.
-    """
+    filename = file.filename or f"upload_{int(datetime.now().timestamp())}.txt"
     try:
-        logger.info(f"Uploading document: {request.title}")
-        
-        # Process the document upload
-        document = await service.upload_document(request)
-        
-        # Schedule background indexing
-        background_tasks.add_task(
-            service.index_document,
-            document
-        )
-        
-        response = DocumentResponse(
-            id=document.id,
-            title=document.title,
-            authors=document.authors,
-            publication_date=document.publication_date,
-            document_type=document.document_type,
-            source=document.source,
-            credibility_score=document.credibility_score,
-            indexed_at=datetime.now()
-        )
-        
-        logger.info(f"Successfully uploaded document {document.id}")
-        return response
-        
+        doc_id = pipeline.ingest_document(text, filename)
     except Exception as e:
-        logger.error(f"Error uploading document: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error uploading document: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=str(e))
+
+    await ws_manager.broadcast({
+        "type": "document_indexed",
+        "doc_id": doc_id,
+        "title": filename,
+        "timestamp": datetime.now().isoformat(),
+        "document_count": get_vector_store().document_count,
+    })
+
+    return {"id": doc_id, "filename": filename, "document_count": get_vector_store().document_count}
 
 
-@app.get("/documents/{document_id}", response_model=DocumentResponse)
-async def get_document(
-    document_id: str,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """Get details of a specific document."""
+@app.delete("/api/documents/{doc_id}")
+async def delete_document(doc_id: str):
+    """Remove a document from the index."""
+    store = get_vector_store()
+    store.remove(doc_id)
+    await ws_manager.broadcast({
+        "type": "document_removed",
+        "doc_id": doc_id,
+        "document_count": store.document_count,
+        "timestamp": datetime.now().isoformat(),
+    })
+    return {"message": f"Document {doc_id} removed", "document_count": store.document_count}
+
+
+@app.get("/api/stats")
+async def get_stats():
+    """System statistics."""
+    store = get_vector_store()
+    pipeline = get_pipeline()
+    return {
+        "documents_indexed": store.document_count,
+        "chunks_indexed": len(store._chunks),
+        "pipeline_running": pipeline is not None and pipeline._running,
+        "websocket_connections": ws_manager.connection_count,
+        "documents_path": str(pipeline.documents_path) if pipeline else None,
+        "timestamp": datetime.now().isoformat(),
+    }
+
+
+# ---------------------------------------------------------------------------
+# WebSocket
+# ---------------------------------------------------------------------------
+
+@app.websocket("/ws/{client_id}")
+async def websocket_endpoint(websocket: WebSocket, client_id: str):
+    await ws_manager.connect(websocket, client_id)
     try:
-        document = await service.get_document(document_id)
-        
-        if not document:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Document {document_id} not found"
-            )
-        
-        return DocumentResponse(
-            id=document.id,
-            title=document.title,
-            authors=document.authors,
-            publication_date=document.publication_date,
-            document_type=document.document_type,
-            source=document.source,
-            credibility_score=document.credibility_score,
-            indexed_at=document.metadata.get('indexed_at', datetime.now())
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting document {document_id}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting document: {str(e)}"
-        )
+        # Send current state on connect
+        store = get_vector_store()
+        await ws_manager.send_to(client_id, {
+            "type": "connected",
+            "message": f"Connected to Clinical Evidence Copilot",
+            "document_count": store.document_count,
+            "timestamp": datetime.now().isoformat(),
+        })
 
-
-@app.delete("/documents/{document_id}")
-async def delete_document(
-    document_id: str,
-    background_tasks: BackgroundTasks,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """Delete a document from the knowledge base."""
-    try:
-        success = await service.delete_document(document_id)
-        
-        if not success:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Document {document_id} not found"
-            )
-        
-        # Schedule background cleanup
-        background_tasks.add_task(
-            service.cleanup_document_references,
-            document_id
-        )
-        
-        return {"message": f"Document {document_id} deleted successfully"}
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error deleting document {document_id}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error deleting document: {str(e)}"
-        )
-
-
-@app.get("/recommendations/{query_id}/history", response_model=RecommendationHistoryResponse)
-async def get_recommendation_history(
-    query_id: str,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """
-    Get the history of recommendations for a specific query.
-    
-    Provides tracking of how recommendations change over time as new
-    evidence becomes available, supporting Requirements 4.2, 4.3:
-    - Explain why recommendations changed
-    - Maintain history of previous recommendations with timestamps
-    """
-    try:
-        history = await service.get_recommendation_history(query_id)
-        
-        if not history:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"No recommendation history found for query {query_id}"
-            )
-        
-        return RecommendationHistoryResponse(
-            query_id=query_id,
-            recommendations=history,
-            total_changes=len(history) - 1 if len(history) > 1 else 0
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting recommendation history for {query_id}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting recommendation history: {str(e)}"
-        )
-
-
-@app.get("/recommendations/recent", response_model=List[ClinicalRecommendation])
-async def get_recent_recommendations(
-    limit: int = 50,
-    clinician_id: Optional[str] = None,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """Get recent recommendations, optionally filtered by clinician."""
-    try:
-        recommendations = await service.get_recent_recommendations(
-            limit=limit,
-            clinician_id=clinician_id
-        )
-        
-        return recommendations
-        
-    except Exception as e:
-        logger.error(f"Error getting recent recommendations: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting recent recommendations: {str(e)}"
-        )
-
-
-@app.websocket("/ws/{clinician_id}")
-async def websocket_endpoint(websocket: WebSocket, clinician_id: str):
-    """
-    WebSocket endpoint for real-time updates.
-    
-    Provides live recommendation updates and evidence change notifications.
-    
-    Validates Requirements 1.5, 4.1, 4.4:
-    - Notify relevant users when new evidence becomes available
-    - Update affected recommendations immediately when new contradictory evidence is ingested
-    - Proactively notify clinicians who previously queried related topics
-    """
-    # Connect to WebSocket manager
-    connected = await websocket_manager.connect(websocket, clinician_id)
-    
-    if not connected:
-        await websocket.close(code=1011, reason="Failed to establish connection")
-        return
-    
-    try:
         while True:
-            # Receive message from client
-            data = await websocket.receive_text()
-            
             try:
-                message = json.loads(data)
-                await websocket_manager.handle_message(clinician_id, message)
-            except json.JSONDecodeError:
-                await websocket_manager._send_error(clinician_id, "Invalid JSON message")
+                data = await asyncio.wait_for(websocket.receive_text(), timeout=30)
+                msg = json.loads(data)
+                if msg.get("type") == "ping":
+                    await ws_manager.send_to(client_id, {
+                        "type": "pong",
+                        "timestamp": datetime.now().isoformat(),
+                        "document_count": store.document_count,
+                    })
+            except asyncio.TimeoutError:
+                # Send heartbeat
+                try:
+                    await ws_manager.send_to(client_id, {
+                        "type": "heartbeat",
+                        "document_count": store.document_count,
+                        "timestamp": datetime.now().isoformat(),
+                    })
+                except Exception:
+                    break
+            except WebSocketDisconnect:
+                break
             except Exception as e:
-                logger.error(f"Error handling WebSocket message from {clinician_id}: {e}")
-                await websocket_manager._send_error(clinician_id, "Error processing message")
-    
-    except WebSocketDisconnect:
-        logger.info(f"WebSocket disconnected for clinician {clinician_id}")
-    except Exception as e:
-        logger.error(f"WebSocket error for clinician {clinician_id}: {e}")
+                logger.warning(f"WS error for {client_id}: {e}")
+                break
     finally:
-        await websocket_manager.disconnect(clinician_id)
-
-
-@app.post("/notifications/subscribe", response_model=dict)
-async def subscribe_to_notifications(
-    request: NotificationRequest,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """
-    Subscribe to notifications for specific queries or keywords.
-    
-    This endpoint allows clinicians to set up notification preferences
-    for receiving updates about recommendation changes and new evidence.
-    """
-    try:
-        # In a full implementation, this would store subscription preferences in a database
-        # For now, we'll just acknowledge the subscription
-        
-        logger.info(f"Clinician {request.clinician_id} subscribed to notifications for keywords: {request.query_keywords}")
-        
-        return {
-            "message": "Subscription created successfully",
-            "clinician_id": request.clinician_id,
-            "keywords": request.query_keywords,
-            "notification_types": request.notification_types,
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Error creating notification subscription: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error creating subscription: {str(e)}"
-        )
-
-
-@app.get("/notifications/{clinician_id}", response_model=List[NotificationResponse])
-async def get_notifications(
-    clinician_id: str,
-    limit: int = 50,
-    unread_only: bool = False,
-    service: ClinicalService = Depends(get_clinical_service)
-):
-    """Get notifications for a specific clinician."""
-    try:
-        # In a full implementation, this would retrieve notifications from a database
-        # For now, return empty list as notifications are handled via WebSocket
-        
-        return []
-        
-    except Exception as e:
-        logger.error(f"Error getting notifications for {clinician_id}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting notifications: {str(e)}"
-        )
-
-
-@app.get("/ws/stats", response_model=dict)
-async def get_websocket_stats():
-    """Get WebSocket connection statistics."""
-    try:
-        stats = websocket_manager.get_connection_stats()
-        return {
-            "websocket_stats": stats,
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Error getting WebSocket stats: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting WebSocket stats: {str(e)}"
-        )
-
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    """Global exception handler for unhandled errors."""
-    logger.error(f"Unhandled exception: {exc}")
-    return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content=ErrorResponse(
-            error="Internal server error",
-            detail="An unexpected error occurred",
-            timestamp=datetime.now()
-        ).dict()
-    )
+        await ws_manager.disconnect(client_id)
 
 
 if __name__ == "__main__":
@@ -529,5 +427,5 @@ if __name__ == "__main__":
         host=settings.host,
         port=settings.port,
         reload=settings.debug,
-        log_level="info"
+        log_level="info",
     )
