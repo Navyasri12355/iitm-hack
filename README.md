@@ -102,14 +102,3 @@ The system follows a microservices architecture with:
 2. **Agentic Reasoning Layer**: Multi-step query processing and medical intelligence
 3. **API Layer**: REST endpoints and WebSocket connections
 4. **Client Layer**: Web interface and EHR integrations
-
-## Contributing
-
-1. Follow the task-based development approach outlined in `.kiro/specs/clinical-evidence-copilot/tasks.md`
-2. Implement property-based tests for all core functionality
-3. Ensure HIPAA compliance for any patient data handling
-4. Test on Linux/MacOS for Pathway functionality
-
-## License
-
-[Add your license information here]
